@@ -2,6 +2,7 @@ package io.gaia_app.runner;
 
 import io.gaia_app.credentials.AWSCredentials;
 import io.gaia_app.credentials.CredentialsRepository;
+import io.gaia_app.credentials.CredentialsService;
 import io.gaia_app.credentials.EmptyCredentials;
 import io.gaia_app.modules.bo.TerraformModule;
 import io.gaia_app.stacks.bo.Job;
@@ -44,7 +45,7 @@ class StackRunnerTest {
     private StepRepository stepRepository;
 
     @Mock
-    private CredentialsRepository credentialsRepository;
+    private CredentialsService credentialsService;
 
     @Mock
     private JobWorkflow jobWorkflow;
@@ -406,13 +407,13 @@ class StackRunnerTest {
         stack.setCredentialsId("dummy");
         var credentials = new AWSCredentials("dummy","dummy");
 
-        when(credentialsRepository.findById("dummy")).thenReturn(Optional.of(credentials));
+        when(credentialsService.loadCredentials("dummy")).thenReturn(credentials);
 
         // when
         stackRunner.plan(jobWorkflow, module, stack);
 
         // then
-        verify(credentialsRepository).findById("dummy");
+        verify(credentialsService).loadCredentials("dummy");
         assertThat(job.getCredentials()).isEqualTo(credentials);
     }
 
@@ -422,13 +423,13 @@ class StackRunnerTest {
         stack.setCredentialsId("dummy");
         var credentials = new AWSCredentials("dummy","dummy");
 
-        when(credentialsRepository.findById("dummy")).thenReturn(Optional.of(credentials));
+        when(credentialsService.loadCredentials("dummy")).thenReturn(credentials);
 
         // when
         stackRunner.apply(jobWorkflow, module, stack);
 
         // then
-        verify(credentialsRepository).findById("dummy");
+        verify(credentialsService).loadCredentials("dummy");
         assertThat(job.getCredentials()).isEqualTo(credentials);
     }
 
@@ -438,13 +439,13 @@ class StackRunnerTest {
         stack.setCredentialsId("dummy");
         var credentials = new AWSCredentials("dummy","dummy");
 
-        when(credentialsRepository.findById("dummy")).thenReturn(Optional.of(credentials));
+        when(credentialsService.loadCredentials("dummy")).thenReturn(credentials);
 
         // when
         stackRunner.retry(jobWorkflow, module, stack);
 
         // then
-        verify(credentialsRepository).findById("dummy");
+        verify(credentialsService).loadCredentials("dummy");
         assertThat(job.getCredentials()).isEqualTo(credentials);
     }
 

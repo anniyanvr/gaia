@@ -8,6 +8,9 @@ services:
         environment:
             - "GAIA_MONGODB_URI=mongodb://mongo/gaia"
             - "GAIA_EXTERNAL_URL=http://172.17.0.1:8080"
+            - "GAIA_VAULT_ENABLED=true"
+            - "GAIA_VAULT_URI=http://vault:8200"
+            - "GAIA_VAULT_AUTHENTICATION_TOKEN=admin123"
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock
 
@@ -16,3 +19,12 @@ services:
             context: .
             dockerfile: ./Dockerfile-db
         image: gaia-db
+
+    vault:
+        image: vault
+        ports:
+            - "8200:8200"
+        environment:
+            - "VAULT_DEV_ROOT_TOKEN_ID=admin123"
+        cap_add:
+          - IPC_LOCK

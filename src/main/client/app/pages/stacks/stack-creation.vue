@@ -144,9 +144,8 @@
       this.module = await getModule(this.moduleId);
       const credentialsList = await getCredentialsList();
       this.credentials = credentialsList
-        .filter((cred) => cred.provider === this.module.mainProvider)
+        .filter((cred) => cred.provider.includes(this.module.mainProvider))
         .map((cred) => ({ value: cred.id, text: cred.name }));
-
 
       this.stack.moduleId = this.module.id;
       this.stack.variableValues = {};
